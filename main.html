@@ -13,11 +13,21 @@
   <div class="graph-wrapper">
     <div class="graph">Graph</div>
     <div class="side-buttons">
-      <button class="simulate-btn">Simulate Data</button>
-      <button class="collect-btn">Collect Data</button>
+      <button id="simulate-btn">Simulate Data</button>
+      <button id="collect-btn">Collect Data</button>
     </div>
   </div>
-  
-  <button class="predict-btn">Predict</button>
+
+  <button id="predict-btn">Predict</button>
+
+  <script>
+    document.getElementById("simulate-btn").addEventListener("click", function() {
+    this.style.backgroundColor = "#ddd"; 
+    setTimeout(() => this.style.backgroundColor = "#4CAF50", 200); 
+    alert("Starting Simulation!");
+    });
+    document.getElementById("predict-btn").addEventListener("click", function(){alert("Starting Prediction!")});
+    document.getElementById("collect-btn").addEventListener("click", function(){alert("Starting Data Collection!")});
+  </script>
 </body>
 </html>
