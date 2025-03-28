@@ -7,6 +7,7 @@
 </head>
 <body>
   <header>
+    <img src="backend/pictures/logo2.png" alt="TempWise Logo" class="logo">
     <h1>TEMP WISE</h1>
   </header>
 
@@ -22,12 +23,18 @@
 
   <script>
     document.getElementById("simulate-btn").addEventListener("click", function() {
-    this.style.backgroundColor = "#ddd"; 
-    setTimeout(() => this.style.backgroundColor = "#4CAF50", 200); 
-    alert("Starting Simulation!");
+      this.style.backgroundColor = "#9ACBD0"; 
+      setTimeout(() => this.style.backgroundColor = "#006A71", 200); 
+      alert("Starting Simulation!");
     });
-    document.getElementById("predict-btn").addEventListener("click", function(){alert("Starting Prediction!")});
-    document.getElementById("collect-btn").addEventListener("click", function(){alert("Starting Data Collection!")});
+
+    document.getElementById("predict-btn").addEventListener("click", function(){
+      alert("Starting Prediction!")
+    });
+
+    document.getElementById("collect-btn").addEventListener("click", function(){
+      alert("Starting Data Collection!")
+    });
   </script>
 </body>
 </html>
