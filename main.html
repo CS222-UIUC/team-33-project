@@ -23,20 +23,22 @@
   <button id="predict-btn">Predict</button>
 
   <script>
-   
     var ctx = document.getElementById("myChart").getContext("2d");
+    let simulationInterval = null;
+    let startTime = null;
 
     
     var myChart = new Chart(ctx, {
-        type: 'line',  
+        type: 'line',
         data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],          //mock data - need api connection to move forward
+            labels: [],
             datasets: [{
                 label: 'Temperature (°C)',
-                data: [10, 12, 14, 18, 22, 25], // Placeholder data
+                data: [],
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 2
+                borderWidth: 2,
+                tension: 0.4
             }]
         },
         options: {
@@ -48,19 +50,54 @@
     });
 
     
+    function getRandomInRange(lower, upper) {
+        return lower + (Math.random() * (upper - lower));
+    }
+
+    
+    function addDataPoint() {
+        const timeStamp = new Date().toLocaleTimeString();
+        const temperature = getRandomInRange(10, 30); //THIS IS THE RANGE FOR THE DATA
+        
+        // Add new data
+        myChart.data.labels.push(timeStamp);
+        myChart.data.datasets[0].data.push(temperature);
+        
+       //currently limited to 20 points, we can adjust this later
+        if(myChart.data.labels.length > 20) {
+            myChart.data.labels.shift();
+            myChart.data.datasets[0].data.shift();
+        }
+        
+        myChart.update();
+    }
+
+    
     document.getElementById("simulate-btn").addEventListener("click", function() {
-        this.style.backgroundColor = "#9ACBD0"; 
-        setTimeout(() => this.style.backgroundColor = "#006A71", 200); 
-        alert("Starting Simulation!");
+        if(simulationInterval) {
+            // Stop simulation
+            clearInterval(simulationInterval);
+            simulationInterval = null;
+            this.textContent = "Simulate Data";
+            this.style.backgroundColor = "#006A71";
+        } else {
+            // Start simulation
+            startTime = new Date();
+            simulationInterval = setInterval(addDataPoint, 1000); // Update every 1 second
+            this.textContent = "Stop Simulation";
+            this.style.backgroundColor = "#9ACBD0";
+        }
     });
 
+   
     document.getElementById("predict-btn").addEventListener("click", function(){
         alert("Starting Prediction!")
     });
 
+    
     document.getElementById("collect-btn").addEventListener("click", function(){
         alert("Starting Data Collection!")
     });
-  </script>
+</script>
 </body>
 </html>
