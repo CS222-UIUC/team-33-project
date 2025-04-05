@@ -3,9 +3,13 @@ from django.http import HttpResponse
 import requests
 from dotenv import load_dotenv
 import os
+import io
+import urllib, base64
+import matplotlib.pyplot as plt
+from django.shortcuts import render
+from sklearn.linear_model import LinearRegression
+import numpy as np
 # Create your views here.
-
-
 
 def home(request):
     return HttpResponse('Welcome to TempWise!')
@@ -26,5 +30,32 @@ def callAPI(request):
                 "icon": weather_data["weather"][0]["icon"],
             }
     return render(request, "weather.html", context)
+
+def temperature_plot(request):
+  
+    X = np.array([[0], [4], [8], [12], [16], [20], [23]])
+    y = np.array([4.2, 5.5, 10.3, 15.2, 13.1, 9.4, 6.3])
+
+    model = LinearRegression()
+    model.fit(X, y)
+
+    fig, ax = plt.subplots()
+    ax.scatter(X, y, color='blue', label='Actual data')
+    ax.plot(X, model.predict(X), color='red', label='Regression line')
+    ax.set_xlabel('Hour of Day')
+    ax.set_ylabel('Temperature (°C)')
+    ax.set_title('Simple Linear Regression: Hour vs. Temperature')
+    ax.legend()
+    ax.grid(True)
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+    uri = urllib.parse.quote(string)
+
+    context = {'plot': uri}
+    return render(request, 'temperature.html', context)
+
 
 
