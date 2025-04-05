@@ -16,10 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from welcomePage.views import home, callAPI
+from welcomePage.views import home, callAPI, temperature_plot
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('weather/', callAPI ),
+    path('temp/', temperature_plot)
 ]
