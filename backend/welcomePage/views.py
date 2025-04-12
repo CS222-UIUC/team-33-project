@@ -32,21 +32,27 @@ def callAPI(request):
     return render(request, "weather.html", context)
 
 def temperature_plot(request):
-  
+    
     X = np.array([[0], [4], [8], [12], [16], [20], [23]])
     y = np.array([4.2, 5.5, 10.3, 15.2, 13.1, 9.4, 6.3])
 
-    model = LinearRegression()
+    degree = 3
+    model = make_pipeline(PolynomialFeatures(degree), LinearRegression())
     model.fit(X, y)
+
+    X_plot = np.linspace(0, 23, 100).reshape(-1, 1)
+    y_plot = model.predict(X_plot)
+
 
     fig, ax = plt.subplots()
     ax.scatter(X, y, color='blue', label='Actual data')
-    ax.plot(X, model.predict(X), color='red', label='Regression line')
+    ax.plot(X_plot, y_plot, color='red', label=f'Polynomial Regression (degree {degree})')
     ax.set_xlabel('Hour of Day')
     ax.set_ylabel('Temperature (°C)')
-    ax.set_title('Simple Linear Regression: Hour vs. Temperature')
+    ax.set_title('Polynomial Regression: Hour vs. Temperature')
     ax.legend()
     ax.grid(True)
+
 
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
@@ -56,6 +62,3 @@ def temperature_plot(request):
 
     context = {'plot': uri}
     return render(request, 'temperature.html', context)
-
-
-
