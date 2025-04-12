@@ -13,7 +13,7 @@
   </header>
 
   <div class="graph-wrapper">
-    <canvas id="myChart"></canvas>  
+    <canvas id="myChart" width="400" height="200"></canvas>  
     <div class="side-buttons">
       <button id="simulate-btn">Simulate Data</button>
       <button id="collect-btn">Collect Data</button>
@@ -27,7 +27,7 @@
     let simulationInterval = null;
     let startTime = null;
 
-    
+    // Initialize the chart
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -49,32 +49,32 @@
         }
     });
 
-    
     function getRandomInRange(lower, upper) {
         return lower + (Math.random() * (upper - lower));
     }
 
-    
     function addDataPoint() {
         const timeStamp = new Date().toLocaleTimeString();
-        const temperature = getRandomInRange(10, 30); //THIS IS THE RANGE FOR THE DATA
-        
+        const temperature = getRandomInRange(10, 30); // Adjust range as needed
+
         // Add new data
         myChart.data.labels.push(timeStamp);
         myChart.data.datasets[0].data.push(temperature);
-        
-       //currently limited to 20 points, we can adjust this later
-        if(myChart.data.labels.length > 20) {
+
+        // Limit to 20 points; shift data if more than 20 points
+        if (myChart.data.labels.length > 20) {
             myChart.data.labels.shift();
             myChart.data.datasets[0].data.shift();
         }
-        
-        myChart.update();
+
+        // Clear and reset the chart
+        myChart.update('none'); // Update chart but avoid animation
+        myChart.update();  // Force chart update with animation
     }
 
-    
+    // Event listener for simulate button
     document.getElementById("simulate-btn").addEventListener("click", function() {
-        if(simulationInterval) {
+        if (simulationInterval) {
             // Stop simulation
             clearInterval(simulationInterval);
             simulationInterval = null;
@@ -89,15 +89,16 @@
         }
     });
 
-   
+    // Event listener for predict button
     document.getElementById("predict-btn").addEventListener("click", function(){
         alert("Starting Prediction!")
     });
 
-    
+    // Event listener for collect button
     document.getElementById("collect-btn").addEventListener("click", function(){
         alert("Starting Data Collection!")
     });
-</script>
+
+  </script>
 </body>
 </html>
