@@ -1,0 +1,24 @@
+{
+  "name": "team-33-project",
+  "version": "1.0.0",
+  "description": "team-33-project - microcontroller",
+  "main": "backend.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://njacobs-3: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@github.com/CS222-UIUC/team-33-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CS222-UIUC/team-33-project/issues"
+  },
+  "homepage": "https://github.com/CS222-UIUC/team-33-project#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}
