@@ -29,8 +29,17 @@ function getRandomInRange(lower, upper) {
     return lower + (Math.random() * (upper - lower));
 }
 
-function addDataPoint() {
-    fetch('http://localhost:3000/api/temperature')
+function addDataPoint(state) {
+
+    let url = '';
+    
+    
+    if (state === 'simulate') {
+        url = 'http://localhost:3000/api/simulate'; // Simulate temperature
+    } else if (state === 'collect') {
+        url = 'http://localhost:3000/api/collect'; // Collect temperature
+    }
+    fetch(url)
         .then(res => res.json())
         .then(data => {
             myChart.data.labels.push(data.time);
@@ -48,29 +57,128 @@ function addDataPoint() {
 
 // Event listener for simulate button
 document.getElementById("simulate-btn").addEventListener("click", function() {
-    if (simulationInterval) {
-        // Stop simulation
+    const simulateButton = this;
+    const collectButton = document.getElementById("collect-btn");
+
+    // Disable the other button and the current button
+    simulateButton.disabled = true;
+    collectButton.disabled = true;
+    simulateButton.textContent = "Simulating...";
+    simulateButton.style.backgroundColor = "#ccc"; // Greyed out
+    collectButton.style.backgroundColor = "#ccc"; // Greyed out
+
+    // Start simulation
+    simulationInterval = setInterval(() => addDataPoint('simulate'), 1000);
+
+
+    // Stop simulation after 20 seconds
+    setTimeout(() => {
         clearInterval(simulationInterval);
         simulationInterval = null;
-        this.textContent = "Simulate Data";
-        this.style.backgroundColor = "#006A71";
-    } else {
-        // Start simulation
-        startTime = new Date();
-        simulationInterval = setInterval(addDataPoint, 1000); // Update every 1 second
-        this.textContent = "Stop Simulation";
-        this.style.backgroundColor = "#9ACBD0";
-    }
+
+        simulateButton.textContent = "Simulation Complete";
+        console.log("✅ Simulation finished after 20 seconds.");
+        
+
+
+        const predictBtn = document.getElementById("predict-btn");
+        predictBtn.disabled = false;
+        predictBtn.style.backgroundColor = "#006A71";
+        // No need to re-enable the buttons
+        // simulateButton.disabled = false;
+        // collectButton.disabled = false;
+        // simulateButton.style.backgroundColor = "#006A71"; // Reset color
+        // collectButton.style.backgroundColor = "#006A71"; // Reset color
+        // simulateButton.textContent = "Simulate Data"; // Reset text
+        // collectButton.textContent = "Collect Data"; // Reset text
+    }, 10000); // 20 seconds = 20000 ms
+});
+
+// Event listener for collect button
+document.getElementById("collect-btn").addEventListener("click", function() {
+    const collectButton = this;
+    const simulateButton = document.getElementById("simulate-btn");
+
+    // Disable the other button and the current button
+    collectButton.disabled = true;
+    simulateButton.disabled = true;
+    collectButton.textContent = "Collecting...";
+    collectButton.style.backgroundColor = "#ccc"; // Greyed out
+    simulateButton.style.backgroundColor = "#ccc"; // Greyed out
+
+    // Start collecting data (same as simulation)
+    simulationInterval = setInterval(() => addDataPoint('collect'), 1000);
+
+    // Stop collection after 20 seconds
+    setTimeout(() => {
+        clearInterval(simulationInterval);
+        simulationInterval = null;
+
+        collectButton.textContent = "Collection Complete";
+        console.log("✅ Data collection finished after 20 seconds.");
+
+
+        const predictBtn = document.getElementById("predict-btn");
+        predictBtn.disabled = false;
+        predictBtn.style.backgroundColor = "#006A71";
+        // No need to re-enable the buttons
+        // collectButton.disabled = false;
+        // simulateButton.disabled = false;
+        // collectButton.style.backgroundColor = "#006A71"; // Reset color
+        // simulateButton.style.backgroundColor = "#006A71"; // Reset color
+        // collectButton.textContent = "Collect Data"; // Reset text
+        // simulateButton.textContent = "Simulate Data"; // Reset text
+    }, 20000); // 20 seconds = 20000 ms
 });
 
 // Event listener for predict button
 document.getElementById("predict-btn").addEventListener("click", function(){
+    predictBtn = this;
     alert("Starting Prediction!")
+    predictBtn.disabled = true;
+    predictBtn.style.backgroundColor = "#9ACBD0";
+
+
+
+
+    fetch('http://localhost:3000/api/predict', {
+        method: 'POST'
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(`Error: ${data.error}`);
+        } else {
+            // Extract slope and intercept from the response
+            const slope = data.slope;
+            const intercept = data.intercept;
+    
+            // Get x-values (labels) from the chart
+            const xValues = myChart.data.labels;
+    
+            // Calculate the y-values for the line of best fit based on the slope and intercept
+            const yFitValues = xValues.map(x => slope * x + intercept);
+    
+            // Add the line of best fit dataset to the chart
+            myChart.data.datasets.push({
+                label: 'Line of Best Fit',
+                data: yFitValues,  // Predicted y-values based on slope and intercept
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+                tension: 0,  // Line will be straight
+                fill: false  // No area under the line
+            });
+    
+            // Re-render the chart to display the updated data
+            myChart.update();
+        }
+    })
+    .catch(err => {
+        console.error("Prediction error:", err);
+        alert("Prediction failed.");
+    });
+    
 });
 
 // Event listener for collect button
-document.getElementById("collect-btn").addEventListener("click", function(){
-    alert("Starting Data Collection!")
-});
-
-  
