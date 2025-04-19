@@ -29,6 +29,36 @@ function getRandomInRange(lower, upper) {
     return lower + (Math.random() * (upper - lower));
 }
 
+function getFirstReading() {
+    // 1. Open a synchronous XHR
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'backend/readings.txt', false /* false = synchronous */);
+    xhr.send(null);
+
+    // 2. Check for HTTP errors
+    if (xhr.status < 200 || xhr.status >= 300) {
+        throw new Error(`Failed to load readings.txt (status ${xhr.status})`);
+    }
+
+    // 3. Split into lines, trim & drop empties
+    const lines = xhr.responseText
+      .split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(Boolean);
+
+    if (lines.length === 0) {
+      throw new Error('readings.txt contains no data');
+    }
+
+    // 4. Parse the first non‑empty line
+    const value = parseFloat(lines[0]);
+    if (Number.isNaN(value)) {
+        throw new Error("Invalid number in readings.txt: \"" + lines[0] + "\"");
+    }
+
+    return value;
+}
+
 function addDataPoint(state) {
 
     let url = '';
@@ -93,6 +123,7 @@ document.getElementById("simulate-btn").addEventListener("click", function() {
         // collectButton.textContent = "Collect Data"; // Reset text
     }, 10000); // 20 seconds = 20000 ms
 });
+
 
 // Event listener for collect button
 document.getElementById("collect-btn").addEventListener("click", function() {
