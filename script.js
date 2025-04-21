@@ -212,4 +212,26 @@ document.getElementById("predict-btn").addEventListener("click", function(){
     
 });
 
-// Event listener for collect button
+function resetChartAndUI() {
+    
+    myChart.data.labels = [];
+    myChart.data.datasets = [myChart.data.datasets[0]]; 
+
+    myChart.update();
+
+    const simulateButton = document.getElementById("simulate-btn");
+    const collectButton = document.getElementById("collect-btn");
+    const predictButton = document.getElementById("predict-btn");
+
+    simulateButton.disabled = false;
+    collectButton.disabled = false;
+    predictButton.disabled = true;
+
+    simulateButton.textContent = "Simulate Data";
+    collectButton.textContent = "Collect Data";
+    predictButton.textContent = "Predict";
+
+    simulateButton.style.backgroundColor = "#006A71";
+    collectButton.style.backgroundColor = "#006A71";
+    predictButton.style.backgroundColor = "#ccc";
+}
