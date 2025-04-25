@@ -163,54 +163,89 @@ document.getElementById("collect-btn").addEventListener("click", function() {
 });
 
 // Event listener for predict button
-document.getElementById("predict-btn").addEventListener("click", function(){
-    predictBtn = this;
-    alert("Starting Prediction!")
+// Event listener for predict button
+// Event listener for predict button
+// Event listener for predict button
+document.getElementById("predict-btn").addEventListener("click", function() {
+    const predictBtn = this;
     predictBtn.disabled = true;
-    predictBtn.style.backgroundColor = "#9ACBD0";
+    predictBtn.textContent = "Predicting...";
+    predictBtn.style.backgroundColor = "#ccc";
 
-
-
-
-    fetch('http://localhost:3000/api/predict', {
-        method: 'POST'
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.error) {
-            alert(`Error: ${data.error}`);
-        } else {
-            // Extract slope and intercept from the response
-            const slope = data.slope;
-            const intercept = data.intercept;
-    
-            // Get x-values (labels) from the chart
-            const xValues = myChart.data.labels;
-    
-            // Calculate the y-values for the line of best fit based on the slope and intercept
-            const yFitValues = xValues.map(x => slope * x + intercept);
-    
-            // Add the line of best fit dataset to the chart
-            myChart.data.datasets.push({
-                label: 'Line of Best Fit',
-                data: yFitValues,  // Predicted y-values based on slope and intercept
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 2,
-                tension: 0,  // Line will be straight
-                fill: false  // No area under the line
-            });
-    
-            // Re-render the chart to display the updated data
-            myChart.update();
+    try {
+        // Get temperature data from chart
+        const tempData = myChart.data.datasets[0].data;
+        
+        // Check minimum data points
+        if (tempData.length < 2) {
+            throw new Error("Need at least 2 data points");
         }
-    })
-    .catch(err => {
+
+        // Create array of {x, y} points (x = index, y = temperature)
+        const dataPoints = tempData.map((y, index) => ({ x: index, y }));
+
+        // Calculate regression terms
+        const n = tempData.length;
+        const sumX = dataPoints.reduce((acc, p) => acc + p.x, 0);
+        const sumY = dataPoints.reduce((acc, p) => acc + p.y, 0);
+        const sumXY = dataPoints.reduce((acc, p) => acc + p.x * p.y, 0);
+        const sumX2 = dataPoints.reduce((acc, p) => acc + p.x ** 2, 0);
+
+        const denominator = n * sumX2 - sumX ** 2;
+        
+        let slope, intercept;
+        if (denominator === 0) {
+            // Handle horizontal line case
+            slope = 0;
+            intercept = sumY / n;
+            updateChartWithFit(slope, intercept, "No trend (constant values)");
+        } else {
+            slope = (n * sumXY - sumX * sumY) / denominator;
+            intercept = (sumY - slope * sumX) / n;
+            updateChartWithFit(slope, intercept, "Success");
+        }
+    } catch (err) {
         console.error("Prediction error:", err);
-        alert("Prediction failed.");
-    });
-    
+        document.getElementById("equation-display").textContent = 
+            "Prediction failed: " + err.message;
+        document.getElementById("equation-display").style.color = "red";
+    } finally {
+        predictBtn.disabled = false;
+        predictBtn.textContent = "Predict";
+        predictBtn.style.backgroundColor = "#006A71";
+    }
 });
+
+// Helper function to update chart with best fit line
+function updateChartWithFit(slope, intercept, message) {
+    // Generate fit line data
+    const xValues = Array.from({ length: myChart.data.labels.length }, (_, i) => i);
+    const yFitValues = xValues.map(x => slope * x + intercept);
+
+    // Update or add dataset
+    const fitDatasetIndex = myChart.data.datasets.findIndex(ds => ds.label === 'Line of Best Fit');
+    if (fitDatasetIndex >= 0) {
+        myChart.data.datasets[fitDatasetIndex].data = yFitValues;
+    } else {
+        myChart.data.datasets.push({
+            label: 'Line of Best Fit',
+            data: yFitValues,
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            tension: 0,
+            pointRadius: 0,
+            fill: false
+        });
+    }
+
+    myChart.update();
+    
+    // Update equation display
+    document.getElementById("equation-display").textContent = 
+        `y = ${slope.toFixed(4)}x + ${intercept.toFixed(4)} (${message})`;
+    document.getElementById("equation-display").style.color = "#000";
+}
 
 function resetChartAndUI() {
     
