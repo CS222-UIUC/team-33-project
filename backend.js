@@ -23,14 +23,44 @@ app.get('/api/simulate', (req, res) => {
     res.json({ time, temp: temperature });
 });
 
-app.get('/api/collect', (req, res) => {
-    const temperature = 15 + Math.random() * 15; // Generates 15–30 °C
-    const time = new Date().toLocaleTimeString();
 
-    collectedData.push({ time, temp: temperature }); // Store collected data
+const fs   = require('fs/promises');      // promise-based, non-blocking
+const path = require('path');
+app.get('/api/collect', async (req, res, next) => {
+  const time = new Date().toLocaleTimeString('en-US', { hour12: false });
 
+  try {
+    // Resolve an absolute path like “…/backend/readings.txt”
+    const filePath = path.join(__dirname, 'backend', 'readings.txt');
+
+    // Read the whole file (⚠ synchronous versions will block every request)
+    const raw = await fs.readFile(filePath, 'utf8');
+
+    // split → trim → drop empties
+    const lines = raw
+      .split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(Boolean);
+
+    if (!lines.length) {
+      throw new Error('readings.txt contains no data');
+    }
+
+    const value = parseFloat(lines[0]);
+    if (Number.isNaN(value)) {
+      throw new Error(`Invalid number in readings.txt: "${lines[0]}"`);
+    }
+
+    // Everything succeeded — store & respond
+    const temperature = value;                // <-- it's a normal let/const now
+    collectedData.push({ time, temp: temperature });
     res.json({ time, temp: temperature });
+
+  } catch (err) {
+    next(err);                                // let your Express error handler format 500s
+  }
 });
+
 
 
 app.post('/api/predict', (req, res) => {
