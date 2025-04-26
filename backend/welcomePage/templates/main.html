@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TEMP WISE</title>
+  <link rel="stylesheet" href="../static/front.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+</head>
+<body>
+  <header>
+    <img src="backend/pictures/logo2.png" alt="TempWise Logo" class="logo">
+    <h1>TEMP WISE</h1>
+  </header>
+
+  <div class="graph-wrapper">
+    <canvas id="myChart" width="400" height="200"></canvas>  
+    <div class="side-buttons">
+      <button id="simulate-btn">Simulate Data</button>
+      <button id="collect-btn">Collect Data</button>
+    </div>
+  </div>
+
+  <button id="predict-btn" disabled>Predict</button>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

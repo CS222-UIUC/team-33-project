@@ -1,0 +1,49 @@
+<!-- templates/forecast.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Forecast Comparison</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background-color: #f0f4f8;
+        }
+        form {
+            margin-bottom: 1rem;
+        }
+        input, button {
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Compare Weather Forecast with Custom Model</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="city">Enter a city:</label>
+        <input type="text" name="city" id="city" required placeholder="e.g., Chicago">
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if plot %}
+        <h2>Forecast for {{ city }}</h2>
+        <img src="data:image/png;base64,{{ plot }}" alt="Temperature Comparison">
+    {% endif %}
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+</body>
+</html>
