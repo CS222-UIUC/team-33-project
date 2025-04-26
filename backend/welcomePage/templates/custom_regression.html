@@ -1,0 +1,24 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Custom Regression</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <h1>📈 Predict Temperature with Your Own Data</h1>
+    <form method="post">
+        {% csrf_token %}
+        <p>Enter hours (comma-separated): <input type="text" name="hours"></p>
+        <p>Enter temps (comma-separated): <input type="text" name="temps"></p>
+        <input type="submit" value="Generate Regression">
+    </form>
+    {% if plot %}
+        <h2>Result</h2>
+        <img src="data:image/png;base64,{{ plot }}" alt="Custom Regression Plot">
+    {% endif %}
+    <br><a href="{% url 'home' %}">← Back to Home</a>
+</body>
+</html>
