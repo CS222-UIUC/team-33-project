@@ -16,11 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from welcomePage.views import home, callAPI, temperature_plot
+from welcomePage.views import home, callAPI, temperature_plot, custom_regression, forecast_compare, micro, travel_suggestions
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
-    path('weather/', callAPI ),
-    path('temp/', temperature_plot)
+    path('weather/', callAPI, name='weather'),
+    path('temp/', temperature_plot, name='temp'),
+    path('custom/', custom_regression, name='custom'),
+    path('forecast/', forecast_compare, name='forecast'),
+    path('iot/', micro, name='iot'),
+    path('suggestions/', travel_suggestions, name="suggestions")
+
+
+    
 ]
