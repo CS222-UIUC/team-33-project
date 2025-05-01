@@ -1,35 +1,48 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f9ff;
+    background-color: #F2EFE7; /* soft beige background */
     color: #333;
     padding: 20px;
     text-align: center;
 }
 
 h1 {
-    color: #2266aa;
+    color: #006A71; /* deep teal, matches header */
 }
 
 a {
-    color: #0077cc;
+    color: #48A6A7; /* medium teal */
     text-decoration: none;
 }
 
 img {
     margin-top: 10px;
     border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* matches logo shadow style */
 }
 
 form input[type="text"], form input[type="submit"] {
     padding: 8px;
     margin: 5px;
     font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #9ACBD0; /* light teal border */
 }
 
 form input[type="submit"] {
-    background-color: #0077cc;
+    background-color: #48A6A7; /* medium teal background */
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+form input[type="submit"]:hover {
+    background-color: #006A71;
+    transform: scale(1.05);
+}
+
+form input[type="submit"]:active {
+    background-color: #9ACBD0;
+    transform: scale(1);
 }

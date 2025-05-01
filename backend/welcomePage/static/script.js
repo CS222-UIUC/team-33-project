@@ -107,7 +107,7 @@ document.getElementById("simulate-btn").addEventListener("click", function() {
         simulationInterval = null;
 
         simulateButton.textContent = "Simulation Complete";
-        console.log("✅ Simulation finished after 20 seconds.");
+        console.log("✅ Simulation finished after 10 seconds.");
         
 
 
@@ -146,7 +146,7 @@ document.getElementById("collect-btn").addEventListener("click", function() {
         simulationInterval = null;
 
         collectButton.textContent = "Collection Complete";
-        console.log("✅ Data collection finished after 20 seconds.");
+        console.log("✅ Data collection finished after 10 seconds.");
 
 
         const predictBtn = document.getElementById("predict-btn");
@@ -159,7 +159,7 @@ document.getElementById("collect-btn").addEventListener("click", function() {
         // simulateButton.style.backgroundColor = "#006A71"; // Reset color
         // collectButton.textContent = "Collect Data"; // Reset text
         // simulateButton.textContent = "Simulate Data"; // Reset text
-    }, 20000); // 20 seconds = 20000 ms
+    }, 10000); // 20 seconds = 20000 ms
 });
 
 // Event listener for predict button
