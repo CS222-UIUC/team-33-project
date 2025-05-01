@@ -17,6 +17,7 @@ def home(request):
     return render(request, 'home.html')
 
 
+
 def callAPI(request):
     load_dotenv(os.path.join(os.path.dirname(__file__), "keys.env"))
     key = os.getenv("API_KEY")
