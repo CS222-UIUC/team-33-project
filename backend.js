@@ -53,7 +53,7 @@ async function checkMicrocontroller() {
   await new Promise(resolve => setTimeout(resolve, 3000));
 
   // stop the script
-  proc.kill();
+  //proc.kill();
 
   // read back the first value
   const filePath = path.join(backendDir, 'readings.txt');
@@ -66,12 +66,17 @@ async function checkMicrocontroller() {
   }
 }
 
+app.get('/api/checkmicro_bridge', async (req, res) =>{
+  await checkMicrocontroller();
+  res.sendStatus(204);
+});
+
 app.get('/api/collect', async (req, res, next) => {
   const time = new Date().toLocaleTimeString('en-US', { hour12: false });
 
   try {
     // FIRST: make sure the microcontroller actually updated readings.txt
-    await checkMicrocontroller(); // TODO: Let the user know by displaying the error message.
+    // TODO: Let the user know by displaying the error message.
 
     
     // Resolve an absolute path like “…/backend/readings.txt”

@@ -20,7 +20,14 @@ var myChart = new Chart(ctx, {
     options: {
         responsive: true,
         scales: {
-            y: { beginAtZero: true }
+            y: { 
+                beginAtZero: false,
+                
+
+
+
+
+             }
         }
     }
 });
@@ -75,7 +82,7 @@ function addDataPoint(state) {
             myChart.data.labels.push(data.time);
             myChart.data.datasets[0].data.push(data.temp);
 
-            if (myChart.data.labels.length > 20) {
+            if (myChart.data.labels.length > 30) {
                 myChart.data.labels.shift();
                 myChart.data.datasets[0].data.shift();
             }
@@ -96,6 +103,8 @@ document.getElementById("simulate-btn").addEventListener("click", function() {
     simulateButton.textContent = "Simulating...";
     simulateButton.style.backgroundColor = "#ccc"; // Greyed out
     collectButton.style.backgroundColor = "#ccc"; // Greyed out
+
+
 
     // Start simulation
     simulationInterval = setInterval(() => addDataPoint('simulate'), 1000);
@@ -121,12 +130,15 @@ document.getElementById("simulate-btn").addEventListener("click", function() {
         // collectButton.style.backgroundColor = "#006A71"; // Reset color
         // simulateButton.textContent = "Simulate Data"; // Reset text
         // collectButton.textContent = "Collect Data"; // Reset text
-    }, 10000); // 20 seconds = 20000 ms
+    }, 30000); // 20 seconds = 20000 ms
 });
 
 
+function wait(ms){
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
 // Event listener for collect button
-document.getElementById("collect-btn").addEventListener("click", function() {
+document.getElementById("collect-btn").addEventListener("click", async function() {
     const collectButton = this;
     const simulateButton = document.getElementById("simulate-btn");
 
@@ -136,6 +148,11 @@ document.getElementById("collect-btn").addEventListener("click", function() {
     collectButton.textContent = "Collecting...";
     collectButton.style.backgroundColor = "#ccc"; // Greyed out
     simulateButton.style.backgroundColor = "#ccc"; // Greyed out
+
+    url = 'http://localhost:3000/api/checkmicro_bridge'; 
+    fetch(url);
+    
+    await wait(3000);
 
     // Start collecting data (same as simulation)
     simulationInterval = setInterval(() => addDataPoint('collect'), 1000);
@@ -159,7 +176,7 @@ document.getElementById("collect-btn").addEventListener("click", function() {
         // simulateButton.style.backgroundColor = "#006A71"; // Reset color
         // collectButton.textContent = "Collect Data"; // Reset text
         // simulateButton.textContent = "Simulate Data"; // Reset text
-    }, 10000); // 20 seconds = 20000 ms
+    }, 30000); // 20 seconds = 20000 ms
 });
 
 // Event listener for predict button
