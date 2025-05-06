@@ -1,6 +1,6 @@
 # Introduction
 
-## What is the TempWise?
+## What is TempWise?
 
 **TempWise** is a Node.js/Django-based web application that helps users explore, predict, and understand temperature data through interactive features, IoT devices, regression modeling, and real-time weather forecasts.
 
