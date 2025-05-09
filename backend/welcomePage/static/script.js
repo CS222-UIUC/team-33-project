@@ -32,6 +32,8 @@ var myChart = new Chart(ctx, {
     }
 });
 
+
+
 function getRandomInRange(lower, upper) {
     return lower + (Math.random() * (upper - lower));
 }
@@ -232,6 +234,60 @@ document.getElementById("predict-btn").addEventListener("click", function() {
         predictBtn.style.backgroundColor = "#006A71";
     }
 });
+
+document.getElementById("celebrate-btn")?.addEventListener("click", function() {
+    // Simple confetti effect
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'];
+    const container = document.querySelector('.chart-container') || document.body;
+    
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'absolute';
+        confetti.style.width = '10px';
+        confetti.style.height = '10px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.borderRadius = '50%';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.top = '-10px';
+        confetti.style.opacity = '0.8';
+        
+        container.appendChild(confetti);
+        
+        // Animation
+        const animation = confetti.animate([
+            { top: '-10px', transform: 'rotate(0deg)' },
+            { top: '100vh', transform: 'rotate(360deg)' }
+        ], {
+            duration: 2000 + Math.random() * 3000,
+            easing: 'cubic-bezier(0.1,0.8,0.9,1)'
+        });
+        
+        animation.onfinish = () => confetti.remove();
+    }
+    
+    // Also add a fun message
+    const message = document.createElement('div');
+    message.textContent = '🎉 Great Job! 🎉';
+    message.style.position = 'absolute';
+    message.style.top = '50%';
+    message.style.left = '50%';
+    message.style.transform = 'translate(-50%, -50%)';
+    message.style.fontSize = '2em';
+    message.style.fontWeight = 'bold';
+    message.style.color = '#ff5722';
+    message.style.zIndex = '1000';
+    container.appendChild(message);
+    
+    setTimeout(() => {
+        message.animate([
+            { opacity: 1 },
+            { opacity: 0 }
+        ], {
+            duration: 1000
+        }).onfinish = () => message.remove();
+    }, 1500);
+});
+
 
 // Helper function to update chart with best fit line
 function updateChartWithFit(slope, intercept, message) {
