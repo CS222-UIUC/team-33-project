@@ -30,7 +30,7 @@ form input[type="text"], form input[type="submit"] {
 }
 
 form input[type="submit"] {
-    background-color: #48A6A7; /* medium teal background */
+    background-color: #1f6566; /* medium teal background */
     color: white;
     border: none;
     cursor: pointer;
