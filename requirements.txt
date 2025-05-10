@@ -1,0 +1,7 @@
+django
+numpy
+requests
+matplotplib
+sklearn
+dotenv
+scipy
