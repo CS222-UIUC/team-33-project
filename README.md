@@ -84,13 +84,61 @@ python manage.py runserver
 Note, you must:
 - have installed all the modules located in `requirements.txt`.
 
-2. To add links for LMS:
-```
-python src/ics.py add <link> <lms>
-```
+2. Setting up the IOTS:
+# TempWise Arduino + DHT11 Setup Guide
 
-3. To read and get your data:
-```
-python src/ics.py read [notion | todoist]
-```
+This guide walks you through connecting a DHT11 temperature sensor to an Arduino Uno and uploading the sample sketch to begin reading and printing temperature values over Serial.
+
+---
+
+## Hardware Needed
+
+- **Arduino Uno**  
+- **DHT11** temperature & humidity sensor  
+- Jumper wires  
+- Breadboard (optional)
+
+---
+
+## Wiring
+
+If your DHT11 has 3 pins, wire it as follows:
+
+| DHT11 Pin | Arduino Pin   |
+|-----------|---------------|
+| VCC       | 5V            |
+| GND       | GND           |
+| DATA      | Digital Pin 9 |
+
+---
+
+## Software Setup
+
+1. **Install the Arduino IDE**  
+   Download & install from:  
+   https://www.arduino.cc/en/software
+
+2. **Install Required Libraries**  
+   1. Open the Arduino IDE.  
+   2. Go to **Sketch** → **Include Library** → **Manage Libraries…**  
+   3. Search for **DHT sensor library by Adafruit** and click **Install**.  
+   4. Also install **Adafruit Unified Sensor**.
+
+---
+
+## Uploading the Sketch
+
+1. Connect your Arduino Uno to your computer via USB.  
+2. In the Arduino IDE, select:  
+   - **Tools → Board → Arduino Uno**  
+   - **Tools → Port → (your COM port)**  
+3. Open the provided `TempWise_DHT11.ino` sketch.  
+4. Click **Upload** (the → arrow button).  
+5. Open **Serial Monitor** (Tools → Serial Monitor) at **9600 baud** to view temperature readings.
+
+Links:
+1. Link to the sensor used: https://sensorkit.arduino.cc/sensorkit/module/lessons/lesson/08-the-temperature-sensor
+2. Link to the IOT device: https://store-usa.arduino.cc/products/arduino-uno-rev3?gQT=3
+
+
  - To access your assignments into Todoist, follow the instructions [here](https://todoist.com/help/articles/importing-or-exporting-project-templates#importing-project-templates-from-a-csv-file) to import the "new_data.csv" file to a Project. You can repeatedly import this file as it updates and Todoist will automatically merge them for you.
