@@ -84,7 +84,7 @@ python manage.py runserver
 Note, you must:
 - have installed all the modules located in `requirements.txt`.
 
-2. To add links for LMS:
+2. To connect :
 ```
 python src/ics.py add <link> <lms>
 ```
